@@ -1,0 +1,72 @@
+pragma solidity >=0.5.0 <0.6.0;
+import "./ownable.sol";
+
+contract StockUpOrDown is Ownable{
+    struct Stock{
+        string stock;
+        uint guessUp;
+        uint guessDown;
+        uint64 endDate;
+        uint24 startPrice;
+        uint24 endPrice;
+    }
+    
+    struct Position{
+        uint stockId;
+        uint investment;
+        address owner;
+        bool up;
+    }
+    
+    Stock[] public stocks;
+    Position[] public positions;
+    
+    function createStock(string memory stock, uint64 endDate) public{
+        require(endDate >= now + 14 days);
+        uint24 startPrice = 0;
+        //oracle get startPrice
+        stocks.push(Stock(stock, 0, 0, endDate, startPrice, startPrice));
+    }
+    
+    function guess(uint id, bool up) public payable{
+        require(stocks[id].endDate >= now + 7 days);
+        positions.push(Position(id, msg.value, msg.sender, up));
+        if(up == true){
+            stocks[id].guessUp += msg.value;
+        }
+        if(up == false){
+            stocks[id].guessDown += msg.value;
+        }
+    }
+    
+    function unixToDate(uint64 time) internal returns (string memory){
+        //?
+    }
+    
+    function getAnswer(uint id)internal returns(bool){
+        //if(orcale(unixToDate(stocks[id].endDate)) > stock[id].startPrice){
+            //return true;
+        //}
+        //else{
+            //return false;
+        //}
+    }
+    
+    function payUp(uint id) internal{
+        
+    }
+    
+    function payDown(uint id) internal{
+        
+    }
+    
+    function endStock(uint id) public{
+        require(stocks[id].endDate < now - 7 days);
+        if(getAnswer(id) == true){
+            
+        }
+        else{
+            
+        }
+    }
+}
